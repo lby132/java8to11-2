@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.*;
 
 public class Foo {
@@ -49,6 +51,29 @@ public class Foo {
         //UnaryOperator와 비슷하게 세개의 타입이 같은 BinaryOperator<Intger>이런식으로 사용가능. BiFunction<T,T,T>
         BinaryOperator<Integer> plus20 = (i1, i2) -> i1 + i2;
         System.out.println("plus20 = " + plus20.apply(2,3));
+
+        System.out.println("==============메소드 참고============");
+
+        UnaryOperator<String> hi = Greeting::hi;  //타입::스태틱 메소드
+
+        Greeting greeting = new Greeting();
+        UnaryOperator<String> hi2 = greeting::hello; //객체 래퍼런스::인스턴스 메소드
+
+        Supplier<Greeting> newGreeting = Greeting::new;  //타입::인스턴스 메소드
+        newGreeting.get();  // Supplier는 get을 해야 인스턴스가 만들어진다.
+
+        //Greeting::new처럼 메서드참조를 한다고 해서 다 똑같진 않다.
+        //파라미터를 가진 생성자를 호출한건지 기본 생성자를 호출한건지에 따라 다르다. 파라미터가 있는 생성자를 호출할땐
+        //Function<String, Greeting> 이렇게 타입을 명시를 해주면 된다.
+        Function<String, Greeting> greetingFunction = Greeting::new;
+        final Greeting kkk = greetingFunction.apply("kkk");
+        System.out.println("kkk = " + kkk.getName());
+
+        Supplier<Greeting> newGreeting2 = Greeting::new;
+
+        String[] names = {"lby", "study", "java"};
+        Arrays.sort(names, String::compareToIgnoreCase);
+        System.out.println(Arrays.toString(names));
 
     }
 }
