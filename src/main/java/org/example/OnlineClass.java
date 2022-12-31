@@ -15,7 +15,7 @@ public class OnlineClass {
     }
 
     public Optional<Progress> getProgress() {
-        return Optional.ofNullable(progress);
+        return Optional.empty();
     }
 
     public int getId() {

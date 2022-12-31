@@ -68,6 +68,6 @@ public class App
         spring.forEach(System.out::println);
 
         OnlineClass spring_boot = new OnlineClass(1, "spring boot", true);
-        final Duration studyDuration = spring_boot.getProgress().get().getStudyDuration();
+        //final Duration studyDuration = spring_boot.getProgress().getStudyDuration();
     }
 }
