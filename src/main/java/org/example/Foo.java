@@ -1,8 +1,8 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 public class Foo {
 
@@ -71,9 +71,45 @@ public class Foo {
 
         Supplier<Greeting> newGreeting2 = Greeting::new;
 
+        System.out.println("=================iterator=======================");
+
         String[] names = {"lby", "study", "java"};
         Arrays.sort(names, String::compareToIgnoreCase);
         System.out.println(Arrays.toString(names));
 
+        List<String> name = new ArrayList<>();
+        name.add("lby");
+        name.add("study");
+        name.add("java");
+        name.add("hard");
+
+        Spliterator<String> spliterator = name.spliterator();//쪼갤수 있는 iterator
+        final Spliterator<String> stringSpliterator = spliterator.trySplit();
+        while (spliterator.tryAdvance(System.out::println)); //tryAdvance는 hasNext같은 목적. 값이 있을때까지 돌고 없으면 false를 리턴하고 끝남
+        System.out.println("=================================");
+        while (stringSpliterator.tryAdvance(System.out::println));// 반반으로 쪼갬
+
+        System.out.println("=================Stream=======================");
+
+        final long l = name.stream().map(String::toUpperCase)
+                .filter(s -> s.startsWith("L"))
+                .count();
+        System.out.println("l = " + l);
+
+       // name.removeIf(s -> s.startsWith("l"));
+        name.forEach(System.out::println);
+
+        System.out.println("==============================");
+
+        Comparator<String> comparator = String::compareToIgnoreCase;
+        name.sort(comparator.reversed());//역순 정렬
+
+        name.forEach(System.out::println);
+
+        final List<String> collect = name.parallelStream().map(s -> {
+            System.out.println(s + " " + Thread.currentThread().getName());
+            return s.toUpperCase();
+        }).collect(Collectors.toList());
+        collect.forEach(System.out::println);
     }
 }
