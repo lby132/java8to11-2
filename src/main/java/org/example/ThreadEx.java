@@ -3,7 +3,7 @@ package org.example;
 import java.util.concurrent.*;
 
 public class ThreadEx {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         /*Thread thread = new Thread(() -> {
             while (true) {
                 System.out.println("Thread: " + Thread.currentThread().getName());
@@ -32,8 +32,26 @@ public class ThreadEx {
         //executorService.shutdown(); //현재 진행중인 작업을 다 끝내고 셧다운함.
         //executorService.shutdownNow(); // 현재 진행중인 작업이 종료되지 않아도 셧다운 시킬 수 있음.
 
-        final ScheduledExecutorService executorService1 = Executors.newSingleThreadScheduledExecutor();
-        executorService1.scheduleAtFixedRate(getRunnable("Hello"), 1, 2, TimeUnit.SECONDS);
+//        final ScheduledExecutorService executorService1 = Executors.newSingleThreadScheduledExecutor();
+//        executorService1.scheduleAtFixedRate(getRunnable("Hello"), 1, 2, TimeUnit.SECONDS);
+
+        final ExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        Callable<String> hello = () -> {
+            Thread.sleep(2000L);
+            return "Hello";
+        };
+
+        final Future<String> submit = executorService.submit(hello);
+        System.out.println(submit.isDone()); //isDone을 통해 끝났는지 체크 실행이 끝나지 않았으면 false
+        System.out.println("Started");
+
+        //submit.get();   //hello에서 걸어준 sleep2초동안 기다린다.
+        submit.cancel(false); //파라미터값 false는 실행중인 작업을 기다리고 true는 기다리지 않고 종료
+
+        System.out.println(submit.isDone());
+        System.out.println("End");
+        executorService.shutdown();
 
     }
 
